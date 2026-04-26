@@ -1,0 +1,96 @@
+---
+title: "Install GatomIA: prerequisites, CLI, and VS Code extension"
+description: "Install GitHub Copilot Chat, SpecKit or OpenSpec, the GatomIA CLI, and the GatomIA VS Code extension to set up your Agentic Spec-Driven Development environment."
+---
+
+GatomIA depends on a few tools that you install once before setting up the VS Code extension. Work through the steps below in order: first the required GitHub Copilot Chat extension, then a spec system (SpecKit is recommended), then the GatomIA CLI, and finally the GatomIA VS Code extension itself.
+
+<Note>
+  **GitHub Copilot Chat is required.** GatomIA routes all AI-assisted prompts through Copilot Chat or an ACP-compatible agent. Without it, spec generation, task execution, and agent commands will not work.
+</Note>
+
+<Steps>
+  <Step title="Install GitHub Copilot Chat">
+    Open VS Code, go to the Extensions view (`Ctrl+Shift+X` / `Cmd+Shift+X`), search for **GitHub Copilot Chat**, and install it. VS Code 1.90.0 or newer is required.
+
+    Sign in to GitHub when prompted to activate your Copilot subscription.
+  </Step>
+
+  <Step title="Install a spec system">
+    GatomIA supports two spec systems. SpecKit is the recommended option; OpenSpec is available if you prefer it or already use it in your project.
+
+    <Tabs>
+      <Tab title="SpecKit (recommended)">
+        Install the Specify CLI globally using `uv`:
+
+        ```shell
+        uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+        ```
+
+        Then initialize SpecKit in your project folder:
+
+        ```shell
+        specify init --here --ai copilot
+        ```
+
+        This creates a `.specify/` directory with memory, templates, and a constitution scaffold.
+      </Tab>
+      <Tab title="OpenSpec">
+        Install the OpenSpec CLI globally using npm:
+
+        ```shell
+        npm install -g @fission-ai/openspec@latest
+        ```
+
+        Then initialize OpenSpec in your project folder:
+
+        ```shell
+        openspec init
+        ```
+
+        This creates an `openspec/` directory with an `AGENTS.md` file and spec folder structure.
+      </Tab>
+    </Tabs>
+  </Step>
+
+  <Step title="Install the GatomIA CLI">
+    Install the GatomIA CLI globally using `uv`:
+
+    ```shell
+    uv tool install gatomia --from git+https://github.com/eitatech/gatomia-cli.git
+    ```
+
+    Then configure GitHub Copilot as the default LLM provider:
+
+    ```shell
+    gatomia config set --llm-provider copilot --main-model gpt-4
+    ```
+
+    If your environment uses the `mia` alias, run `mia config set` with the same flags.
+  </Step>
+
+  <Step title="Install the GatomIA VS Code extension">
+    Choose the installation method that suits you:
+
+    <Tabs>
+      <Tab title="VS Code Marketplace">
+        Open the Extensions view in VS Code, search for **GatomIA**, and click **Install**. The extension is published by EITA.
+      </Tab>
+      <Tab title="VSIX (local build)">
+        Clone the repository and build the extension package:
+
+        ```shell
+        npm run package
+        ```
+
+        This produces a `gatomia-<version>.vsix` file. Install it with:
+
+        ```shell
+        code --install-extension gatomia-<version>.vsix
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+</Steps>
+
+After installation, open a project folder in VS Code. The GatomIA icon appears in the Activity Bar. Click it to open the Specs, Steering, Hooks, and other views. If any dependency is missing, the welcome screen lists what still needs to be set up.

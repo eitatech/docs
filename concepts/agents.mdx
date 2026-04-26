@@ -1,0 +1,110 @@
+---
+title: "How GatomIA registers and uses Copilot Chat agents"
+description: "Discover how GatomIA auto-registers custom GitHub Copilot Chat participants from agent files, and learn how to interact with and create your own agents."
+---
+
+**Agents** in GatomIA are custom GitHub Copilot Chat participants that you define in Markdown files. Each agent file describes a participant's identity, the commands it understands, and the resources it draws on to answer requests. When GatomIA activates, it scans the `resources/agents/` directory, discovers every `.agent.md` file, and registers those agents directly with GitHub Copilot Chat—no manual registration step required. You then interact with them using the familiar `@agent-name /command` syntax inside Copilot Chat.
+
+## How auto-discovery works
+
+At startup, GatomIA's agent discovery service scans `resources/agents/` for `.agent.md` files. For every file it finds, it:
+
+1. Parses the YAML frontmatter to extract the agent's `id`, `name`, `fullName`, `description`, commands, and resources.
+2. Validates the definition for required fields.
+3. Registers the agent as a Copilot Chat participant.
+4. Loads and caches the agent's associated prompts (`.prompt.md`), skills (`.skill.md`), and instruction files.
+
+If `gatomia.agents.enableHotReload` is `true` (the default), any change you make to an agent file or its resources reloads the agent without restarting VS Code.
+
+## Interacting with agents
+
+Once an agent is registered, open GitHub Copilot Chat (`Ctrl+Shift+I` / `Cmd+Shift+I`) and type `@` to see the list of available agents. Select the agent and issue a command:
+
+```text
+@example-agent /analyze
+@speckit /plan
+@task-planner /help
+```
+
+Every agent automatically supports `/help` (lists all commands) and `/help <command>` (shows documentation for a specific command).
+
+## Agent file format
+
+Define a custom agent by creating a file at `resources/agents/<agent-name>.agent.md` with YAML frontmatter followed by Markdown documentation:
+
+```markdown
+---
+id: my-agent
+name: My Agent
+fullName: My Custom Agent Implementation
+description: Describes what this agent does
+commands:
+  - name: analyze
+    description: Analyze project structure
+    tool: my.analyze
+resources:
+  prompts: [analysis.prompt.md]
+  skills: [expertise.skill.md]
+---
+
+# My Agent
+
+Documentation about the agent...
+```
+
+| Field | Description |
+|-------|-------------|
+| `id` | Unique identifier used internally and in hook configurations (e.g., `local:my-agent`) |
+| `name` | Short name used in `@name` syntax in Copilot Chat |
+| `fullName` | Human-readable display name |
+| `description` | Brief summary shown in Copilot's agent picker |
+| `commands` | List of commands the agent handles; each maps to a `tool` handler |
+| `resources.prompts` | Prompt template files (`.prompt.md`) the agent can use |
+| `resources.skills` | Skill packages (`.skill.md`) providing domain knowledge |
+
+## Resource types
+
+<AccordionGroup>
+  <Accordion title="Prompts (.prompt.md)">
+    Prompt files are template prompts that agents use to produce consistent, reusable responses. Store them alongside your agent files in `resources/agents/` or in a subdirectory. Reference them in the agent's `resources.prompts` list.
+  </Accordion>
+  <Accordion title="Skills (.skill.md)">
+    Skill files are domain knowledge packages—curated context about a specific area (e.g., your API conventions, database schema patterns, or testing strategy). Agents reference skills to ground their responses in project-specific knowledge.
+  </Accordion>
+  <Accordion title="Instructions">
+    Instruction files shape the agent's behavior and response style. They work alongside the project rules and Constitution defined in the [Steering](/concepts/steering) system.
+  </Accordion>
+</AccordionGroup>
+
+## The Actions explorer
+
+The **Actions** view in the Activity Bar (controlled by `gatomia.views.actions.visible`) provides a browsable tree of all discovered resources:
+
+- **Prompts** — all `.prompt.md` files available in the workspace
+- **Agents** — registered agents with their commands
+- **Skills** — skill packages loaded for agents
+- **Templates** — spec and document templates
+
+You can run prompts directly from the Actions explorer by clicking the run button next to any prompt entry.
+
+## Configuration
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `gatomia.agents.resourcesPath` | string | `resources` | Directory containing agents and their resources |
+| `gatomia.agents.enableHotReload` | boolean | `true` | Reload agent resources automatically when files change |
+| `gatomia.agents.logLevel` | string | `info` | Logging verbosity: `debug`, `info`, `warn`, or `error` |
+
+## Creating a custom agent
+
+<Steps>
+  <Step title="Create the agent file">
+    Add `resources/agents/my-agent.agent.md` with the frontmatter format shown above. Fill in the `id`, `name`, `description`, and at least one command entry.
+  </Step>
+  <Step title="Add supporting resources">
+    Create any prompt or skill files referenced in the agent's `resources` block. Place them in `resources/prompts/` or `resources/skills/` so GatomIA can cache them at startup.
+  </Step>
+  <Step title="Verify discovery">
+    Save your files. If `gatomia.agents.enableHotReload` is `true` (the default), the agent appears in Copilot Chat immediately. Otherwise, reload the VS Code window with **Developer: Reload Window**.
+  </Step>
+</Steps>

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "luma",
+  "name": "GatomIA",
+  "colors": {
+    "primary": "#5B5BD6",
+    "light": "#EDEDFC",
+    "dark": "#1E1E3F"
+  },
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/eitatech/gatomia-vscode"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/specs",
+              "concepts/steering",
+              "concepts/agents",
+              "concepts/hooks"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/create-spec",
+              "guides/implement-tasks",
+              "guides/manage-steering",
+              "guides/custom-agents",
+              "guides/automate-hooks",
+              "guides/cloud-agents"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "configuration/settings",
+              "configuration/workspace-layout",
+              "configuration/spec-systems"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "reference/commands",
+              "reference/template-variables",
+              "reference/troubleshooting"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

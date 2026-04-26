@@ -1,0 +1,50 @@
+---
+title: "GatomIA: Agentic Spec-Driven Development for VS Code"
+description: "GatomIA is a VS Code extension that brings AI-powered spec-driven development to your workflow using GitHub Copilot, SpecKit, and OpenSpec."
+---
+
+GatomIA is a VS Code extension that supercharges your development workflow with Agentic Spec-Driven Development. It connects GitHub Copilot Chat with structured specifications, steering documents, custom agents, and automation hooks — so you can plan features, generate code, and automate repetitive tasks without leaving your editor.
+
+<CardGroup cols={2}>
+  <Card title="Quick Start" icon="bolt" href="/quickstart">
+    Install GatomIA, set up your first spec, and run your first AI-assisted task in minutes.
+  </Card>
+  <Card title="Installation" icon="download" href="/installation">
+    Step-by-step setup for all prerequisites: GitHub Copilot, SpecKit, OpenSpec, and GatomIA CLI.
+  </Card>
+  <Card title="Create a Spec" icon="file-pen" href="/guides/create-spec">
+    Learn how to define features as structured specifications and send them to Copilot Chat.
+  </Card>
+  <Card title="Automate with Hooks" icon="webhook" href="/guides/automate-hooks">
+    Set up event-driven automation to trigger MCP tools, git actions, or Copilot agents automatically.
+  </Card>
+  <Card title="Steering & Constitution" icon="compass" href="/guides/manage-steering">
+    Control how Copilot behaves across your project with instruction rules and a Constitution document.
+  </Card>
+  <Card title="Custom Agents" icon="robot" href="/guides/custom-agents">
+    Build and register your own Copilot Chat agents with custom commands, prompts, and skills.
+  </Card>
+</CardGroup>
+
+## What GatomIA does
+
+GatomIA organizes your AI-assisted development around four core pillars:
+
+<Steps>
+  <Step title="Specify">
+    Define features as structured specs using SpecKit or OpenSpec. The **Specs** view lets you create, browse, and manage specifications from a dedicated sidebar panel.
+  </Step>
+  <Step title="Implement">
+    Open a generated `tasks.md` file and click **Start Task** to send implementation context directly to GitHub Copilot Chat. Tasks are tracked and can be dispatched to cloud agents like Devin.
+  </Step>
+  <Step title="Steer">
+    Use the **Steering** view to create project rules, user rules, and a Constitution document that shapes how Copilot responds across all your prompts and agents.
+  </Step>
+  <Step title="Automate">
+    Configure **Hooks** to automatically trigger MCP tools, GitHub actions, or custom agents when specs change state, git operations complete, or agent output is ready.
+  </Step>
+</Steps>
+
+<Note>
+  GatomIA requires **GitHub Copilot Chat** to be installed in VS Code. Most features route prompts through Copilot Chat or an ACP-compatible agent like Devin or Gemini CLI.
+</Note>

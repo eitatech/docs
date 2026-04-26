@@ -1,0 +1,130 @@
+---
+title: "SpecKit vs OpenSpec: choosing the right spec system"
+description: "Compare SpecKit and OpenSpec to pick the right spec system for your project, and learn how auto-detection works and how to migrate from OpenSpec to SpecKit."
+---
+
+GatomIA supports two spec systems: **SpecKit** and **OpenSpec**. Both provide a structured approach to spec-driven development, but they differ in their directory layout, CLI tooling, and the conventions they enforce. Picking the right one at the start of a project saves you the effort of migrating later, so read through the comparison below before running your first `init` command.
+
+<Tip>
+  Use SpecKit for new projects. It is actively developed by GitHub, integrates tightly with GitHub Copilot's instruction system, and produces a `constitution.md` that keeps Copilot aligned with your project principles from the very first spec.
+</Tip>
+
+<Tabs>
+  <Tab title="SpecKit">
+    SpecKit is the recommended spec system, developed by GitHub and designed to work natively with GitHub Copilot.
+
+    **Directory layout**
+
+    ```text
+    .specify/
+    ├── memory/
+    │   └── constitution.md       # Project principles
+    ├── templates/                # Spec templates
+    └── scripts/                  # SpecKit scripts
+
+    specs/
+    └── 001-feature-name/
+        ├── spec.md
+        └── 001-task-name.md
+    ```
+
+    **Install the CLI**
+
+    ```bash
+    uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+    ```
+
+    **Initialize in your project**
+
+    ```bash
+    specify init --here --ai copilot
+    ```
+
+    Running `specify init` creates the `.specify/` directory structure and generates a starter `constitution.md` you can customize to reflect your project's guiding principles.
+
+    **Key characteristics**
+
+    - Numbered spec directories (`001-feature-name/`) keep specs ordered and easy to navigate.
+    - The `constitution.md` file acts as the single source of truth for project steering, automatically included in Copilot prompts by GatomIA.
+    - Templates in `.specify/templates/` let you standardize how new specs are structured across your team.
+    - Scripts in `.specify/scripts/` can be invoked by hooks to automate repetitive spec tasks.
+  </Tab>
+
+  <Tab title="OpenSpec">
+    OpenSpec is an alternative spec system that organizes requirements, design, and tasks into three separate files per spec.
+
+    **Directory layout**
+
+    ```text
+    openspec/
+    ├── AGENTS.md                 # Project steering rules
+    ├── project.md                # High-level project specification
+    └── specs/
+        └── <spec-name>/
+            ├── requirements.md
+            ├── design.md
+            └── tasks.md
+    ```
+
+    **Install the CLI**
+
+    ```bash
+    npm install -g @fission-ai/openspec@latest
+    ```
+
+    **Initialize in your project**
+
+    ```bash
+    openspec init
+    ```
+
+    Running `openspec init` creates the `openspec/` directory and generates `AGENTS.md` and `project.md` as starting points.
+
+    **Key characteristics**
+
+    - Each spec is split into three explicit documents: `requirements.md`, `design.md`, and `tasks.md`. This enforces a clear separation between what the feature must do, how it will be built, and the concrete implementation steps.
+    - `AGENTS.md` provides project-level steering instructions, equivalent to SpecKit's `constitution.md`.
+    - Spec names are free-form rather than numbered, which gives more flexibility but less automatic ordering.
+  </Tab>
+</Tabs>
+
+## Side-by-side comparison
+
+| | SpecKit | OpenSpec |
+|---|---|---|
+| **Developed by** | GitHub | Fission AI |
+| **CLI tool** | `specify-cli` (via `uv`) | `openspec` (via `npm`) |
+| **Steering file** | `constitution.md` | `AGENTS.md` |
+| **Spec layout** | Numbered directories with `spec.md` + task files | Named directories with `requirements.md`, `design.md`, `tasks.md` |
+| **Root directory** | `.specify/` + `specs/` | `openspec/` |
+| **Recommended for** | New projects | Existing OpenSpec projects |
+
+## Auto-detection
+
+When you set `gatomia.specSystem` to `"auto"` (the default), GatomIA detects which system you have initialized by scanning your workspace root:
+
+1. If `.specify/` exists, GatomIA activates SpecKit mode.
+2. If `openspec/` exists, GatomIA activates OpenSpec mode.
+3. If neither exists, GatomIA prompts you to initialize one.
+
+You can bypass auto-detection at any time by setting `gatomia.specSystem` to `"speckit"` or `"openspec"` explicitly in your workspace settings.
+
+## Migrating from OpenSpec to SpecKit
+
+If you have an existing OpenSpec project and want to switch to SpecKit, use the built-in migration command. Open the command palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and run **GatomIA: Migrate to SpecKit** (command ID: `gatomia.migration.start`).
+
+The migration runs these steps in order:
+
+<Steps>
+  <Step title="Back up your OpenSpec files">
+    GatomIA creates a full backup of your existing `openspec/` directory before making any changes. You can also trigger this step manually with **GatomIA: Create OpenSpec Backup** (`gatomia.migration.createBackup`).
+  </Step>
+  <Step title="Convert your specs to SpecKit format">
+    GatomIA converts each OpenSpec spec directory into a numbered SpecKit spec folder under `specs/`, mapping `requirements.md`, `design.md`, and `tasks.md` to the equivalent SpecKit structure.
+  </Step>
+  <Step title="Generate a constitution">
+    GatomIA reads your existing `AGENTS.md` and any other steering files, then generates a `constitution.md` under `.specify/memory/` via **GatomIA: Generate Constitution from Guidelines** (`gatomia.migration.generateConstitution`). Review the generated file and edit it to make sure it accurately reflects your project's principles.
+  </Step>
+</Steps>
+
+After migration, set `gatomia.specSystem` to `"speckit"` in your workspace settings (or remove the setting to rely on auto-detection) and verify that GatomIA's Specs view shows your converted specs correctly.

@@ -1,0 +1,112 @@
+---
+title: "GatomIA commands: full VS Code command palette reference"
+description: "A complete reference for every GatomIA command available in the VS Code command palette, grouped by feature area with command IDs and descriptions."
+---
+
+GatomIA registers all its commands under the `GatomIA` category, making them discoverable in the VS Code command palette. Open the palette with `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (macOS), then type `GatomIA` to filter the list to GatomIA commands only.
+
+## Spec commands
+
+Use these commands to create, run, and manage specs in the Specs view. Most of these commands are also accessible via the Specs view toolbar and item context menus.
+
+| Command | ID | Description |
+|---|---|---|
+| Create New Spec | `gatomia.spec.create` | Opens the spec creation form |
+| Refresh Specs | `gatomia.spec.refresh` | Refreshes the Specs view |
+| Delete Spec | `gatomia.spec.delete` | Deletes the selected spec |
+| Run Task | `gatomia.spec.runTask` | Sends a task to Copilot Chat |
+| Run Task Group | `gatomia.spec.runTaskGroup` | Sends a group of tasks to Copilot Chat |
+| Run Full Spec | `gatomia.spec.runFullSpec` | Sends all tasks in a spec to Copilot Chat |
+| Run Full Spec on Cloud | `gatomia.dispatchFullSpec` | Dispatches the full spec to the configured cloud agent |
+| Send to Review | `gatomia.spec.sendToReview` | Transitions a spec to the review state |
+| Reopen | `gatomia.spec.reopen` | Moves a spec back to the current state |
+| Send to Archived | `gatomia.spec.sendToArchived` | Archives a spec |
+| Unarchive | `gatomia.spec.unarchive` | Restores an archived spec |
+| Archive Change | `gatomia.spec.archiveChange` | Archives a change request attached to a spec |
+
+## SpecKit commands
+
+These commands are available when SpecKit is the active spec system. They invoke SpecKit-specific AI workflows through Copilot Chat.
+
+| Command | ID | Description |
+|---|---|---|
+| Specify Feature | `gatomia.speckit.specify` | Generate a spec document for a feature |
+| Plan Feature | `gatomia.speckit.plan` | Plan tasks for a feature |
+| Implement Feature | `gatomia.speckit.implementation` | Implement a feature from its spec |
+| Create Unit Tests | `gatomia.speckit.unit-test` | Generate unit tests for the current spec |
+| Create Integration Tests | `gatomia.speckit.integration-test` | Generate integration tests for the current spec |
+| Clarify Requirements | `gatomia.speckit.clarify` | Clarify ambiguous or incomplete spec requirements |
+| Analyze Spec Quality | `gatomia.speckit.analyze` | Analyze the quality and completeness of a spec |
+| Run Checklist | `gatomia.speckit.checklist` | Run a spec quality checklist |
+| Generate Tasks | `gatomia.speckit.tasks` | Generate a task list from a spec |
+| Convert Tasks to Issues | `gatomia.speckit.taskstoissues` | Convert spec tasks to GitHub issues |
+| Research Feature | `gatomia.speckit.research` | Research a feature before specifying it |
+| Define Data Model | `gatomia.speckit.datamodel` | Define the data model for a feature |
+| Create Design | `gatomia.speckit.design` | Create a design document for a feature |
+| Create Constitution | `gatomia.speckit.constitution` | Generate a constitution document for your project |
+
+## Steering commands
+
+Steering commands create and manage instruction rules that guide Copilot's behavior across your project or your personal environment.
+
+| Command | ID | Description |
+|---|---|---|
+| Create Project Rule | `gatomia.steering.createProjectRule` | Create a project-scoped instruction rule in `.github/instructions/` |
+| Create User Rule | `gatomia.steering.createUserRule` | Create a personal instruction rule in `~/.github/instructions/` |
+| Create Constitution | `gatomia.steering.createConstitution` | Generate a Constitution document to steer Copilot behavior |
+| Global Access Settings | `gatomia.steering.openGlobalResourceAccessSettings` | Open global resource access settings |
+
+## Actions commands
+
+Actions commands manage prompt files, agent definitions, and skill resources stored in your project's resources directory.
+
+| Command | ID | Description |
+|---|---|---|
+| Create Prompt | `gatomia.actions.create` | Create a new prompt file |
+| Create Agent | `gatomia.actions.createAgentFile` | Create an agent definition file |
+| Create Skill | `gatomia.actions.createSkill` | Create a skill resource file |
+| Create Prompt (Built-in) | `gatomia.actions.createCopilotPrompt` | Create a built-in Copilot prompt |
+| Run Action | `gatomia.actions.run` | Execute a prompt or action |
+
+## Hooks commands
+
+Hooks commands let you create, manage, and monitor automation hooks that trigger MCP tool calls when agent operations occur.
+
+| Command | ID | Description |
+|---|---|---|
+| Add Hook | `gatomia.hooks.addHook` | Create a new automation hook |
+| Edit Hook | `gatomia.hooks.edit` | Edit an existing hook |
+| Enable Hook | `gatomia.hooks.enable` | Enable a disabled hook |
+| Pause Hook | `gatomia.hooks.disable` | Disable an active hook |
+| Delete Hook | `gatomia.hooks.delete` | Delete a hook permanently |
+| View Hook Logs | `gatomia.hooks.viewLogs` | Open hook execution logs |
+| Export Hooks | `gatomia.hooks.export` | Export all hooks to a JSON file |
+| Import Hooks | `gatomia.hooks.import` | Import hooks from a JSON file |
+
+## Cloud agent commands
+
+Cloud agent commands configure and interact with external cloud-based agent providers such as Devin.
+
+| Command | ID | Description |
+|---|---|---|
+| Select Cloud Agent Provider | `gatomia.selectProvider` | Choose a cloud agent provider |
+| Change Cloud Agent Provider | `gatomia.changeProvider` | Switch to a different provider |
+| Configure Provider Credentials | `gatomia.configureProvider` | Enter API credentials for the active provider |
+| Run on Cloud | `gatomia.dispatchTask` | Dispatch a task to the configured cloud agent |
+| Cancel Cloud Agent Session | `gatomia.cancelSession` | Cancel an active cloud agent session |
+| Refresh Cloud Agent Sessions | `gatomia.refreshCloudAgents` | Refresh the list of cloud agent sessions |
+| Switch Chat Provider | `gatomia.acp.switchProvider` | Switch the active ACP chat provider |
+
+## General commands
+
+General commands cover settings, dependency management, and help resources.
+
+| Command | ID | Description |
+|---|---|---|
+| GatomIA Settings | `gatomia.settings.open` | Open the GatomIA settings panel |
+| Open MCP Config | `gatomia.settings.openGlobalConfig` | Open the `mcp.json` configuration file |
+| Select Spec System | `gatomia.settings.selectSpecSystem` | Choose between SpecKit and OpenSpec |
+| Install Dependencies | `gatomia.dependencies.check` | Check for and install required dependencies |
+| Show Welcome Screen | `gatomia.showWelcome` | Open the GatomIA welcome screen |
+| GatomIA Help | `gatomia.help.open` | Open help documentation |
+| Migrate to SpecKit | `gatomia.migration.start` | Migrate an OpenSpec project to SpecKit |

@@ -1,0 +1,75 @@
+---
+title: "Set up Copilot steering rules and a Constitution in GatomIA"
+description: "Create project rules, user rules, and a Constitution in GatomIA to guide GitHub Copilot's behavior consistently across your codebase."
+---
+
+Steering documents are instruction files that shape how GitHub Copilot responds in your project. GatomIA provides three types: **project rules** that apply to everyone working in the repository, **user rules** that are personal and never committed to source control, and a **Constitution** (or `AGENTS.md`) that defines high-level principles for the entire project. You manage all three from the **Steering** view in the GatomIA sidebar.
+
+## Create a project rule
+
+Project rules are stored in `.github/instructions/` at the repository root and apply to all team members using Copilot in this workspace.
+
+<Steps>
+  <Step title="Open the Steering view">
+    Click the GatomIA icon in the Activity Bar and locate the **Steering** view in the sidebar panel.
+  </Step>
+  <Step title="Click Create Project Rule">
+    Click the **Create Project Rule** button (folder icon) in the Steering view toolbar. This runs the `gatomia.steering.createProjectRule` command.
+  </Step>
+  <Step title="Enter a name">
+    Type a descriptive name such as `TypeScript Rules` or `API Design Guidelines`. GatomIA normalizes the name to kebab-case automatically.
+  </Step>
+  <Step title="Edit the generated file">
+    GatomIA creates `.github/instructions/<name>.instructions.md` and opens it in the editor. Write your coding standards, architectural patterns, naming conventions, or any other guidelines you want Copilot to follow in this project. Commit the file to share it with your team.
+  </Step>
+</Steps>
+
+## Create a user rule
+
+User rules live in your home directory and apply to you across all projects. They are never committed to any repository.
+
+<Steps>
+  <Step title="Click Create User Rule">
+    Click the **Create User Rule** button (globe icon) in the Steering view toolbar. This runs the `gatomia.steering.createUserRule` command.
+  </Step>
+  <Step title="Enter a name">
+    Type a name for your personal rule, such as `Personal Preferences` or `My Code Style`.
+  </Step>
+  <Step title="Edit the generated file">
+    GatomIA creates `$HOME/.github/instructions/<name>.instructions.md` and opens it for editing. Add any personal guidance — preferred response language, formatting preferences, or toolchain conventions — that should apply regardless of which project you are working on.
+  </Step>
+</Steps>
+
+<Note>
+  Project rules (`.github/instructions/*.instructions.md`) are committed to the repository and shared with the team. User rules (`$HOME/.github/instructions/*.instructions.md`) are stored in your home directory and are never tracked by version control. Keep sensitive or personal preferences in user rules, and keep team-wide standards in project rules.
+</Note>
+
+## Create a Constitution
+
+A Constitution provides project-level principles that influence how Copilot generates specifications and writes code. SpecKit projects receive a `constitution.md` file inside `.specify/memory/`; OpenSpec projects receive an `AGENTS.md` file at the project root.
+
+<Steps>
+  <Step title="Click Create Constitution">
+    Click the **Create Constitution** button (book icon) in the Steering view toolbar. This runs the `gatomia.steering.createConstitution` command.
+  </Step>
+  <Step title="Enter a project description">
+    Type a brief description of your project, such as `Python backend with FastAPI and PostgreSQL` or `React 18 SPA with TypeScript and Zustand`.
+  </Step>
+  <Step title="Copilot generates the Constitution">
+    GatomIA opens GitHub Copilot Chat with a `/speckit.constitution` prompt pre-filled with your description. Follow the chat instructions; Copilot drafts the document and writes it to the appropriate file.
+  </Step>
+  <Step title="Review and refine">
+    Open the generated file and edit it to add or remove principles. Treat the Constitution as a living document — review and update it as your project evolves.
+  </Step>
+</Steps>
+
+## Configure global resource access
+
+By default, GatomIA asks for permission before reading global Copilot resources from your home directory (such as `~/.github/copilot-instructions.md`). You can change this policy in **Settings > GatomIA > Steering**.
+
+| Setting | Values | Description |
+|---|---|---|
+| `gatomia.steering.globalResourceAccessDefault` | `ask` / `allow` / `deny` | Default policy for reading global resources |
+| `gatomia.steering.workspaceGlobalResourceAccess` | `inherit` / `allow` / `deny` | Per-workspace override; `inherit` follows the global default |
+
+Set `allow` to let GatomIA read your user rules silently, or `deny` to prevent any global resource access for a specific workspace.

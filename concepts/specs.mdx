@@ -1,0 +1,112 @@
+---
+title: "What are Specs in GatomIA? Feature Specs Explained"
+description: "Learn how GatomIA uses structured specification documents to drive AI-assisted development with SpecKit and OpenSpec, from creation through task execution."
+---
+
+A **Spec** is a structured feature specification document that anchors every piece of work you do in GatomIA. Instead of jumping straight to code, you write a Spec first—describing the feature's requirements, design, and tasks—and then let GitHub Copilot generate and implement the details. GatomIA supports two Spec systems: **SpecKit** (recommended) and **OpenSpec**. Both follow the same principle of spec-driven development but differ in folder structure and tooling. GatomIA detects which system your project uses automatically when `gatomia.specSystem` is set to `"auto"` (the default).
+
+## Spec systems
+
+<AccordionGroup>
+  <Accordion title="SpecKit (recommended)">
+    SpecKit organizes specs under a top-level `specs/` directory. Each spec lives in a numbered folder, and supporting memory, templates, and scripts live under `.specify/`.
+
+    ```text
+    .specify/
+    ├── memory/
+    │   └── constitution.md    # Project-wide steering rules
+    ├── templates/             # Spec templates
+    └── scripts/               # Helper scripts
+    specs/
+    ├── 001-user-authentication/
+    │   ├── spec.md            # Main specification document
+    │   └── 001-login-form.md  # Individual task file
+    ├── 002-payment-flow/
+    │   ├── spec.md
+    │   └── 001-checkout.md
+    ```
+
+    Initialize SpecKit in your project with:
+
+    ```shell
+    specify init --here --ai copilot
+    ```
+  </Accordion>
+
+  <Accordion title="OpenSpec (alternative)">
+    OpenSpec uses an `openspec/` root directory. Each spec gets its own subdirectory containing separate files for requirements, design, and tasks.
+
+    ```text
+    openspec/
+    ├── AGENTS.md              # Project-wide steering rules
+    ├── project.md             # Project-level specification
+    └── specs/
+        ├── user-authentication/
+        │   ├── requirements.md
+        │   ├── design.md
+        │   └── tasks.md
+        └── payment-flow/
+            ├── requirements.md
+            ├── design.md
+            └── tasks.md
+    ```
+
+    Initialize OpenSpec in your project with:
+
+    ```shell
+    openspec init
+    ```
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  Set `gatomia.specSystem` to `"auto"` (the default) and GatomIA will detect which system your workspace uses. Set it to `"speckit"` or `"openspec"` to force a specific system.
+</Note>
+
+## Creating a Spec
+
+<Steps>
+  <Step title="Open the Specs view">
+    Click the GatomIA icon in the Activity Bar to open the **Specs** view in the sidebar.
+  </Step>
+  <Step title="Create a new Spec">
+    Click **Create New Spec**. Fill in the required product context, an optional summary, and any constraints you want Copilot to respect.
+  </Step>
+  <Step title="Generate with Copilot">
+    Click **Create Spec**. GatomIA compiles your input into an optimized prompt and sends it to GitHub Copilot Chat, which generates the full specification files.
+  </Step>
+  <Step title="Review the generated files">
+    Inspect the generated `spec.md` (SpecKit) or `requirements.md` / `design.md` (OpenSpec). Edit any section that needs adjustment before moving to implementation.
+  </Step>
+</Steps>
+
+## Spec lifecycle
+
+Specs move through the following status states as work progresses:
+
+| Status | Meaning |
+|--------|---------|
+| `current` | Active state; the spec is being written, refined, or implemented |
+| `review` | The spec has been submitted for review; a reviewer is evaluating it |
+| `reopened` | The reviewer returned the spec for revisions; open change requests must be resolved before archiving |
+| `archived` | Work is complete; the spec is preserved as a reference but no longer active |
+
+Status changes emit events that you can respond to with [Hooks](/concepts/hooks).
+
+## Executing tasks
+
+Once a Spec is generated, GatomIA surfaces tasks directly inside your editor using **CodeLens** actions that appear above task checklists in task files.
+
+- **Start Task** — sends a single task's context to GitHub Copilot Chat for implementation.
+- **Start All Tasks** — sends all tasks in the file at once, letting Copilot work through the checklist.
+
+Open any task file (e.g., `specs/001-feature-name/001-task-name.md` in SpecKit or `openspec/specs/<name>/tasks.md` in OpenSpec), look for the CodeLens links above checklist items, and click to begin.
+
+## The Specs view
+
+The **Specs** view in the sidebar lets you browse all specs in your workspace. Each spec shows its current status with a visual indicator. From the view you can:
+
+- Open a spec's files directly
+- Trigger task execution without navigating to the file manually
+- Monitor status across all features at a glance
+- Connect directly to GitHub Copilot Chat for spec-related conversations

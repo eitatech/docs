@@ -1,0 +1,100 @@
+---
+title: "GatomIA workspace layout: files, folders, and what to commit"
+description: "Learn the files and directories GatomIA creates in your project, what each one does, and which files to commit to version control."
+---
+
+When you initialize GatomIA in a project, it works with a predictable directory structure that depends on the spec system you choose. Understanding this layout helps you keep your repository clean, know which files to share with your team, and troubleshoot GatomIA when something goes wrong. The sections below cover each part of the workspace in detail.
+
+<Tabs>
+  <Tab title="SpecKit layout">
+    SpecKit organizes your project under two root directories: `.specify/` for tooling files and `specs/` for feature specifications.
+
+    ```text
+    .specify/
+    ├── memory/
+    │   └── constitution.md       # Project principles that steer Copilot
+    ├── templates/                # Spec templates used when creating new specs
+    └── scripts/                  # SpecKit scripts invoked during spec operations
+
+    specs/
+    ├── 001-feature-name/
+    │   ├── spec.md               # Feature specification
+    │   └── 001-task-name.md      # Implementation task file
+    └── 002-another-feature/
+        ├── spec.md
+        └── 001-task-name.md
+    ```
+
+    Each feature gets its own numbered directory inside `specs/`. The `spec.md` file describes the feature, and individual task files contain the implementation steps GatomIA sends to Copilot when you run tasks.
+
+    The `constitution.md` file inside `.specify/memory/` is the most important steering document in a SpecKit project. It records your project's core principles and constraints, and GatomIA includes it in Copilot prompts to keep generated output consistent with your guidelines.
+  </Tab>
+
+  <Tab title="OpenSpec layout">
+    OpenSpec uses a single `openspec/` directory at the workspace root.
+
+    ```text
+    openspec/
+    ├── AGENTS.md                 # Project steering rules (equivalent to constitution.md)
+    ├── project.md                # High-level project specification
+    └── specs/
+        └── <spec-name>/
+            ├── requirements.md   # What the feature must do
+            ├── design.md         # How the feature will be built
+            └── tasks.md          # Ordered implementation tasks
+    ```
+
+    Each spec lives in its own subdirectory under `openspec/specs/`. The three Markdown files — `requirements.md`, `design.md`, and `tasks.md` — map to the standard phases of spec-driven development. `AGENTS.md` at the root plays the same role as `constitution.md` in SpecKit: it steers Copilot's behavior for the entire project.
+  </Tab>
+</Tabs>
+
+## GatomIA-generated files
+
+GatomIA stores its own configuration and state in two standard VS Code directories. These files are created automatically and managed by the extension.
+
+```text
+.vscode/
+└── gatomia/
+    ├── hooks.json                # Hook configurations for automation workflows
+    └── spec-review-state.json    # Tracks spec review lifecycle state
+
+.github/
+├── instructions/                 # Steering instruction rules (*.instructions.md)
+├── prompts/                      # Custom prompt files surfaced in the Actions view
+└── agents/                       # Agent definition files
+```
+
+`hooks.json` stores all your configured automation hooks, including triggers, actions, and timing settings. `spec-review-state.json` tracks which specs are in draft, review, or archived states.
+
+The `.github/` directory integrates with GitHub Copilot's native instruction system. Files in `.github/instructions/` follow the `*.instructions.md` naming convention and are surfaced in the Steering view. Files in `.github/prompts/` appear in the Actions view and can be run directly against Copilot.
+
+## Agent resources
+
+When you use GatomIA's Copilot Agents integration, your custom agents and their resources live inside `resources/` (configurable via `gatomia.agents.resourcesPath`).
+
+```text
+resources/
+├── agents/                       # Agent definitions (*.agent.md)
+├── prompts/                      # Agent prompt templates (*.prompt.md)
+├── skills/                       # Agent skill packages (*.skill.md)
+└── instructions/                 # Agent-specific instruction files
+```
+
+GatomIA watches this directory and hot-reloads changes automatically when `gatomia.agents.enableHotReload` is `true`. You do not need to restart the extension after editing an agent file.
+
+## What to commit to git
+
+<Note>
+  Commit these files to share them with your team:
+
+  - **`specs/`** or **`openspec/specs/`** — Feature specifications are the primary artifact of spec-driven development and should always be in version control.
+  - **`.specify/memory/constitution.md`** — Encodes project principles that every contributor (and Copilot) should follow.
+  - **`.github/instructions/`** — Project-level steering rules that apply to the whole team.
+  - **`.github/prompts/`** — Shared prompts available to everyone working in the repository.
+  - **`.github/agents/`** — Agent definitions your team relies on.
+  - **`resources/`** — Custom agent resources shared across the team.
+
+  Do **not** commit these files:
+
+  - **`.vscode/gatomia/`** — Contains workspace-local state (`hooks.json`, `spec-review-state.json`) that is specific to your machine and VS Code session. Add `.vscode/gatomia/` to your `.gitignore`.
+</Note>

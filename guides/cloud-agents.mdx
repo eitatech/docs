@@ -1,0 +1,90 @@
+---
+title: "Dispatch GatomIA specs to Devin or Gemini cloud agents"
+description: "Route GatomIA tasks and full specs to Devin or Gemini CLI for autonomous cloud implementation, and control session behavior with ACP settings."
+---
+
+GatomIA can send tasks and full specs to cloud-based AI agents that implement code autonomously — outside your local VS Code session. This frees you to review and iterate on requirements while a cloud agent handles the implementation in parallel. GatomIA supports multiple providers and routes prompts through the Agent Client Protocol (ACP) when running against a compatible CLI.
+
+## Supported providers
+
+| Provider | Protocol | Notes |
+|---|---|---|
+| **GitHub Copilot Chat** | Direct (default) | Local chat; no cloud session required |
+| **Devin** | ACP via Devin CLI | Autonomous implementation; requires a paid Devin API subscription |
+| **Gemini CLI** | ACP via Gemini CLI | Autonomous implementation via Agent Client Protocol |
+
+## Set up a cloud agent
+
+<Steps>
+  <Step title="Open the Cloud Agents view">
+    Click the GatomIA icon in the Activity Bar and select the **Cloud Agents** view. If no provider is configured, you see buttons to select **Devin** or **GitHub Copilot**.
+  </Step>
+  <Step title="Select your provider">
+    Click **Devin** (`gatomia.selectProvider`) or **GitHub Copilot** to set your active provider. You can switch providers at any time using the **Change Cloud Agent Provider** button or the command palette.
+  </Step>
+  <Step title="Configure credentials">
+    Run `gatomia.configureProvider` (or click **Configure Provider Credentials**) to enter your provider-specific credentials. For Devin, enter your Devin API token when prompted. GatomIA stores the token securely in VS Code's secret storage.
+  </Step>
+</Steps>
+
+<Note>
+  Devin requires an active, paid Devin API subscription. Visit the Devin documentation to obtain an API token before configuring this provider in GatomIA.
+</Note>
+
+## Dispatch tasks to the cloud
+
+Once a provider is configured, you can dispatch tasks directly from the Spec Explorer.
+
+<Steps>
+  <Step title="Dispatch a single task">
+    In the Spec Explorer, right-click any task item and select **Run on Cloud** (`gatomia.dispatchTask`). GatomIA sends that task and its spec context to the configured cloud agent.
+  </Step>
+  <Step title="Dispatch all tasks at once">
+    Right-click the tasks folder or spec node and select **Run Full Spec on Cloud** (`gatomia.dispatchFullSpec`). GatomIA sends every task in the spec to the cloud agent in a single session.
+  </Step>
+  <Step title="Monitor progress">
+    Open the **Cloud Agents** view to watch session status in real time. Each dispatched session appears as an item in the list with its current state.
+  </Step>
+  <Step title="Cancel a session">
+    Click the **stop** icon next to a running session or run `gatomia.cancelSession` to terminate it. Remove finished sessions from the list with **Remove Session from List** (`gatomia.removeSession`).
+  </Step>
+</Steps>
+
+## Switch chat providers
+
+Use the command palette to change the active provider without opening settings:
+
+```
+GatomIA: Switch Chat Provider
+```
+
+This runs `gatomia.acp.switchProvider` and presents a quick-pick list of available providers.
+
+## Provider settings
+
+The `gatomia.chat.provider` setting controls which agent receives all prompts issued by GatomIA commands.
+
+| Value | Behavior |
+|---|---|
+| `auto` | Auto-selects based on the host IDE: Windsurf → Devin CLI (ACP), Antigravity → Gemini CLI (ACP), all others → GitHub Copilot Chat |
+| `copilot-chat` | Always routes to GitHub Copilot Chat, regardless of IDE |
+| `devin` | Always routes to Devin CLI via ACP; falls back to Copilot Chat if Devin is unavailable |
+| `gemini` | Always routes to Gemini CLI via ACP; falls back to Copilot Chat if Gemini is unavailable |
+
+## ACP session modes
+
+When routing through Devin or Gemini, GatomIA groups prompts into ACP sessions. Control this behavior with `gatomia.acp.sessionMode`.
+
+| Mode | Description |
+|---|---|
+| `workspace` | Single session shared across the entire workspace. Fastest option; context accumulates across prompts. |
+| `per-spec` | One session per spec ID. Ideal when you work on multiple specs in parallel and want isolated context per spec. |
+| `per-prompt` | Fresh session for every prompt. Slowest option; guarantees no context carries over between prompts. |
+
+## Additional ACP settings
+
+| Setting | Default | Description |
+|---|---|---|
+| `gatomia.acp.permissionDefault` | `ask` | Whether GatomIA asks, allows, or denies tool-call permission requests from ACP agents |
+| `gatomia.acp.verboseLogging` | `false` | Write ACP protocol details, agent thoughts, and tool-call updates to the GatomIA ACP output channel |
+| `gatomia.acp.registryRemoteFetch` | `true` | Consult the public ACP Registry to suggest additional providers beyond the built-in Devin and Gemini entries |

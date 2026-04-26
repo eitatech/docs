@@ -1,0 +1,267 @@
+---
+title: "GatomIA VS Code settings: complete configuration reference"
+description: "Complete reference for all GatomIA VS Code settings under the gatomia namespace: spec systems, view visibility, agents, ACP providers, and custom instructions."
+---
+
+GatomIA exposes all of its configuration options under the `gatomia` namespace in VS Code settings. Open them via **File → Preferences → Settings** and search for "GatomIA", or edit your workspace's `.vscode/settings.json` directly. The example below shows a typical starting configuration you can paste into your settings file and adjust to suit your project.
+
+```json .vscode/settings.json
+{
+  "gatomia.specSystem": "auto",
+  "gatomia.chatLanguage": "English",
+  "gatomia.speckit.specsPath": "specs",
+  "gatomia.speckit.memoryPath": ".specify/memory",
+  "gatomia.agents.resourcesPath": "resources",
+  "gatomia.agents.enableHotReload": true,
+  "gatomia.chat.provider": "auto",
+  "gatomia.acp.sessionMode": "workspace",
+  "gatomia.acp.permissionDefault": "ask"
+}
+```
+
+<AccordionGroup>
+  <Accordion title="General settings">
+    **`gatomia.specSystem`**
+
+    - **Type**: `string`
+    - **Default**: `"auto"`
+    - **Options**: `auto` | `openspec` | `speckit`
+
+    Controls which spec system GatomIA uses. Set to `auto` to let GatomIA detect whether `.specify/` (SpecKit) or `openspec/` (OpenSpec) exists in your workspace. Override with `speckit` or `openspec` to pin a specific system regardless of what is detected.
+
+    ---
+
+    **`gatomia.chatLanguage`**
+
+    - **Type**: `string`
+    - **Default**: `"English"`
+    - **Options**: `English` | `Japanese` | `Spanish` | `French` | `German` | `Chinese (Simplified)` | `Chinese (Traditional)` | `Italian` | `Portuguese (Brazil)` | `Korean` | `Russian`
+
+    Sets the language GitHub Copilot uses when writing responses to GatomIA-initiated prompts. This applies to spec generation, task implementation, and all other Copilot-driven operations.
+  </Accordion>
+
+  <Accordion title="View visibility">
+    Toggle individual views in the GatomIA activity bar panel. Set a value to `false` to hide a view you do not use; set it back to `true` to restore it.
+
+    | Setting | Default | Description |
+    |---|---|---|
+    | `gatomia.views.specs.visible` | `true` | Show or hide the **Specs** view. |
+    | `gatomia.views.actions.visible` | `true` | Show or hide the **Actions** view. |
+    | `gatomia.views.steering.visible` | `true` | Show or hide the **Steering** view. |
+    | `gatomia.views.hooks.visible` | `true` | Show or hide the **Hooks** view. |
+    | `gatomia.views.wiki.visible` | `true` | Show or hide the **Repo Wiki** view. |
+    | `gatomia.views.quickAccess.visible` | `true` | Show or hide the **Quick Access** view. |
+
+    ```json .vscode/settings.json
+    {
+      "gatomia.views.wiki.visible": false,
+      "gatomia.views.quickAccess.visible": false
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="SpecKit settings">
+    These settings control the directory paths SpecKit uses within your workspace. Change them only if you need a non-standard layout; the defaults work for any project initialized with `specify init`.
+
+    **`gatomia.speckit.specsPath`**
+
+    - **Type**: `string`
+    - **Default**: `"specs"`
+
+    Directory where SpecKit stores numbered feature specification folders (for example `specs/001-my-feature/`).
+
+    ---
+
+    **`gatomia.speckit.memoryPath`**
+
+    - **Type**: `string`
+    - **Default**: `".specify/memory"`
+
+    Directory where SpecKit keeps its memory files, including the project constitution.
+
+    ---
+
+    **`gatomia.speckit.templatesPath`**
+
+    - **Type**: `string`
+    - **Default**: `".specify/templates"`
+
+    Directory containing SpecKit spec templates used when creating new specifications.
+
+    ---
+
+    **`gatomia.speckit.scriptsPath`**
+
+    - **Type**: `string`
+    - **Default**: `".specify/scripts"`
+
+    Directory containing SpecKit scripts invoked during spec operations.
+  </Accordion>
+
+  <Accordion title="Copilot / OpenSpec settings">
+    These settings apply when you use OpenSpec or when GatomIA manages Copilot prompt files directly.
+
+    **`gatomia.copilot.specsPath`**
+
+    - **Type**: `string`
+    - **Default**: `"speckit"`
+
+    Path where Copilot specification files are stored. GatomIA reads specs from this directory when resolving prompt context for OpenSpec workflows.
+
+    ---
+
+    **`gatomia.copilot.promptsPath`**
+
+    - **Type**: `string`
+    - **Default**: `".github/prompts"`
+
+    Directory where Copilot prompt Markdown files (`.prompt.md`) are stored and surfaced in the Actions view.
+  </Accordion>
+
+  <Accordion title="Custom instructions">
+    Custom instructions let you append project-specific or personal guidance to the prompts GatomIA sends to Copilot. Each field accepts multi-line text. Instructions in `global` are appended to every prompt; the remaining fields target specific operations.
+
+    **`gatomia.customInstructions.global`**
+
+    - **Type**: `string`
+    - **Default**: `""`
+
+    Appended to every prompt GatomIA sends. Use this to enforce consistent coding conventions, preferred frameworks, or output formatting across all operations.
+
+    ---
+
+    **`gatomia.customInstructions.createSpec`**
+
+    - **Type**: `string`
+    - **Default**: `""`
+
+    Appended only when GatomIA sends a spec creation prompt. Use this to provide extra domain context or structural requirements for new specs.
+
+    ---
+
+    **`gatomia.customInstructions.startAllTask`**
+
+    - **Type**: `string`
+    - **Default**: `""`
+
+    Appended when GatomIA triggers the "start all tasks" prompt against a spec's task list.
+
+    ---
+
+    **`gatomia.customInstructions.runPrompt`**
+
+    - **Type**: `string`
+    - **Default**: `""`
+
+    Appended when you execute a prompt from the Actions view.
+  </Accordion>
+
+  <Accordion title="Steering settings">
+    Steering settings control whether GatomIA reads global Copilot instruction files from your home directory (for example `~/.github/copilot-instructions.md` and `~/.github/instructions/*.instructions.md`).
+
+    **`gatomia.steering.globalResourceAccessDefault`**
+
+    - **Type**: `string`
+    - **Default**: `"ask"`
+    - **Options**: `ask` | `allow` | `deny`
+
+    The default policy applied across all workspaces. Set to `allow` to always include global Copilot resources, `deny` to always exclude them, or leave at `ask` to be prompted each time.
+
+    ---
+
+    **`gatomia.steering.workspaceGlobalResourceAccess`**
+
+    - **Type**: `string`
+    - **Default**: `"inherit"`
+    - **Options**: `inherit` | `allow` | `deny`
+
+    A per-workspace override for the global access policy. Use `inherit` to follow `gatomia.steering.globalResourceAccessDefault`. Set `allow` or `deny` to force a specific behavior for the current workspace regardless of the global default.
+  </Accordion>
+
+  <Accordion title="Agent settings">
+    **`gatomia.agents.resourcesPath`**
+
+    - **Type**: `string`
+    - **Default**: `"resources"`
+
+    The root directory GatomIA scans for agent definitions (`*.agent.md`), prompt templates (`*.prompt.md`), skill packages (`*.skill.md`), and instruction files. Change this if your project stores agent resources in a different location.
+
+    ---
+
+    **`gatomia.agents.enableHotReload`**
+
+    - **Type**: `boolean`
+    - **Default**: `true`
+
+    When enabled, GatomIA watches the `resourcesPath` directory and automatically reloads agent resources whenever files change, without requiring an extension restart.
+
+    ---
+
+    **`gatomia.agents.logLevel`**
+
+    - **Type**: `string`
+    - **Default**: `"info"`
+    - **Options**: `debug` | `info` | `warn` | `error`
+
+    Controls the verbosity of agent operation logs written to the GatomIA output channel. Switch to `debug` when diagnosing agent loading or tool execution issues.
+  </Accordion>
+
+  <Accordion title="Chat provider (ACP) settings">
+    These settings control which agent receives prompts from GatomIA and how sessions are managed when routing through the Agent Client Protocol (ACP).
+
+    **`gatomia.chat.provider`**
+
+    - **Type**: `string`
+    - **Default**: `"auto"`
+    - **Options**: `auto` | `copilot-chat` | `devin` | `gemini`
+
+    Determines which agent receives prompts issued from GatomIA commands:
+
+    - `auto` — selects the best match for the current IDE: Windsurf → Devin CLI (ACP), Antigravity → Gemini CLI (ACP), others → GitHub Copilot Chat.
+    - `copilot-chat` — always routes to GitHub Copilot Chat.
+    - `devin` — always routes to the Devin CLI via ACP (falls back to Copilot Chat if unavailable).
+    - `gemini` — always routes to the Gemini CLI via ACP (falls back to Copilot Chat if unavailable).
+
+    ---
+
+    **`gatomia.acp.sessionMode`**
+
+    - **Type**: `string`
+    - **Default**: `"workspace"`
+    - **Options**: `workspace` | `per-spec` | `per-prompt`
+
+    Controls how GatomIA groups prompts into ACP sessions:
+
+    - `workspace` — a single session shared across the workspace (fastest; context accumulates).
+    - `per-spec` — one session per spec ID (useful when working on several specs in parallel).
+    - `per-prompt` — a fresh session for every prompt (no cross-prompt context; slowest).
+
+    ---
+
+    **`gatomia.acp.permissionDefault`**
+
+    - **Type**: `string`
+    - **Default**: `"ask"`
+    - **Options**: `ask` | `allow` | `deny`
+
+    The default answer GatomIA gives when an ACP agent requests permission to run a tool call. Set to `allow` to auto-approve all tool calls, or `deny` to auto-reject them.
+
+    ---
+
+    **`gatomia.acp.verboseLogging`**
+
+    - **Type**: `boolean`
+    - **Default**: `false`
+
+    When enabled, GatomIA writes ACP protocol details, agent thoughts, and tool-call updates to the **GatomIA ACP** output channel. Enable this when debugging ACP provider issues.
+
+    ---
+
+    **`gatomia.acp.registryRemoteFetch`**
+
+    - **Type**: `boolean`
+    - **Default**: `true`
+
+    When enabled, GatomIA consults the public ACP Registry to suggest additional ACP providers beyond the built-in ones (Devin and Gemini). Disable this in air-gapped environments or to suppress the registry lookup entirely.
+  </Accordion>
+</AccordionGroup>

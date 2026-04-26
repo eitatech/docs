@@ -1,0 +1,72 @@
+---
+title: "Create a feature spec and generate tasks with GatomIA"
+description: "Learn how to open the GatomIA Create Spec form, fill in the required product context, and let GitHub Copilot generate your spec and tasks files."
+---
+
+GatomIA turns a brief feature description into a full specification by compiling your inputs into an optimized prompt and sending it directly to GitHub Copilot Chat. The process takes only a few steps and works with both SpecKit and OpenSpec projects — GatomIA detects which system you are using automatically.
+
+## Open the Create Spec form
+
+<Steps>
+  <Step title="Open the GatomIA sidebar">
+    Click the GatomIA icon in the VS Code Activity Bar. The **Specs** view appears at the top of the sidebar panel.
+  </Step>
+  <Step title="Click the + button">
+    Click the **+** (Create New Spec) button in the Specs view toolbar. This runs the `GatomIA: Create New Spec` command and opens the Create Spec form as a webview panel.
+  </Step>
+  <Step title="Fill in the form fields">
+    Complete the fields in the form. Only **Product Context** is required; all other fields are optional but improve the quality of the generated spec.
+
+    | Field | Required | Description |
+    |---|---|---|
+    | **Product Context** | Yes | Goal, background, and objectives for the feature |
+    | **Key Scenarios** | No | Acceptance criteria and user scenarios |
+    | **Technical Constraints** | No | Libraries, patterns, or systems the implementation must respect |
+    | **Related Files** | No | File paths that the spec should reference |
+    | **Open Questions** | No | Uncertainties or risks to surface in the spec |
+
+    GatomIA autosaves your draft every 600 ms, so your work is preserved if you close and reopen the panel.
+  </Step>
+  <Step title="Click Create Spec">
+    Click the **Create Spec** button. GatomIA validates your input, compiles it into a prompt, and opens **GitHub Copilot Chat** with that prompt pre-loaded.
+  </Step>
+  <Step title="Follow Copilot's instructions">
+    Interact with Copilot in the chat to generate your `spec.md` file. For SpecKit projects, Copilot may also generate a `tasks.md` file. Review the output and iterate through the chat as needed.
+  </Step>
+</Steps>
+
+<Tip>
+  Write a clear, concrete **Product Context**. Vague context like "add authentication" produces generic specs. Specific context — "Add email/password login and Google OAuth with role-based access control (admin, user, guest) using NextAuth.js" — lets Copilot generate a precise, actionable specification.
+</Tip>
+
+## Where your spec files appear
+
+After Copilot generates the spec, the Spec Explorer refreshes automatically. The files land in different locations depending on your spec system.
+
+<Tabs>
+  <Tab title="SpecKit">
+    ```
+    specs/
+    └── 001-feature-name/
+        ├── spec.md
+        └── tasks.md
+    ```
+  </Tab>
+  <Tab title="OpenSpec">
+    ```
+    openspec/specs/
+    └── feature-name/
+        ├── requirements.md
+        ├── design.md
+        └── tasks.md
+    ```
+  </Tab>
+</Tabs>
+
+<Note>
+  GatomIA reads the `gatomia.specSystem` setting to determine which system to use. The default value is `auto`, which means GatomIA inspects your workspace for an existing SpecKit or OpenSpec structure and selects the matching system. You can override this in **Settings > GatomIA > Spec System** if you want to pin a specific choice.
+</Note>
+
+## Next steps
+
+Once your spec files exist, open `tasks.md` to start implementing tasks with Copilot CodeLens annotations. See [Implement tasks from a spec with Copilot](./implement-tasks) for the full workflow.

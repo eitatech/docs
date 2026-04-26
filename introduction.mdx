@@ -1,0 +1,45 @@
+---
+title: "GatomIA: AI-powered spec-driven development in VS Code"
+description: "GatomIA is a VS Code extension for Agentic Spec-Driven Development. Manage specs, steer Copilot, run agents, and automate workflows from a single sidebar."
+---
+
+GatomIA is a VS Code extension that brings Agentic Spec-Driven Development to your editor. It connects GitHub Copilot Chat with structured specifications, steering documents, custom Copilot agents, and MCP-powered automation hooks — so you can plan features, generate implementation tasks, and automate repetitive work without switching tools.
+
+## What GatomIA does
+
+GatomIA organizes AI-assisted development around five areas, each accessible from the GatomIA sidebar in the VS Code Activity Bar.
+
+**Spec management** — Create and browse feature specifications using [SpecKit](https://github.com/github/spec-kit) or [OpenSpec](https://github.com/Fission-AI/OpenSpec). Fill in a product context, summary, and optional constraints, then let Copilot Chat generate a full spec document and task list for you.
+
+**Steering** — Author instruction rules and a Constitution document that shape how Copilot responds across all prompts. Rules can be scoped to a project (`.github/instructions/`) or to your personal user profile (`$HOME/.github/instructions/`).
+
+**Agents** — Discover and interact with Copilot Chat agents registered from your `resources/agents/` directory. Each agent exposes commands you can call directly in chat with `@agent-name /command`.
+
+**Hooks** — Automate workflows by configuring triggers that fire MCP tools, GitHub actions, or custom scripts when agent operations complete. Use template variables like `$agentOutput` and `$outputPath` to pass generated content downstream.
+
+**Cloud agents** — Dispatch spec tasks to cloud agents such as Devin directly from the Specs view, without leaving VS Code.
+
+## How GatomIA fits your workflow
+
+A typical GatomIA session looks like this: you open the **Specs** view, create a spec for a new feature, and send the generated prompt to Copilot Chat. Copilot produces `spec.md` and `tasks.md` files in the `specs/` folder. You open `tasks.md`, click **Start Task** next to a checklist item, and Copilot Chat receives the full task context to begin implementation. Any post-task work — filing issues, sending Slack notifications — can be handled automatically by a hook you configure once in the **Hooks** view.
+
+<Note>
+  GatomIA requires the **GitHub Copilot Chat** extension. Most features route prompts through Copilot Chat or an ACP-compatible agent like Devin or Gemini CLI.
+</Note>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Set up all prerequisites: GitHub Copilot Chat, SpecKit or OpenSpec, and the GatomIA CLI and VS Code extension.
+  </Card>
+  <Card title="Quick start" icon="bolt" href="/quickstart">
+    Create your first spec and run your first AI-assisted task in a few minutes.
+  </Card>
+  <Card title="Specs" icon="file-text" href="/concepts/specs">
+    Learn how GatomIA structures feature specifications and task lists.
+  </Card>
+  <Card title="Hooks" icon="webhook" href="/concepts/hooks">
+    Understand how to trigger automated actions from agent output.
+  </Card>
+</CardGroup>

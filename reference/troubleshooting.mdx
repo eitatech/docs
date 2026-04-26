@@ -1,0 +1,95 @@
+---
+title: "Troubleshoot GatomIA: fixes for common extension issues"
+description: "Step-by-step fixes for the most common GatomIA problems, covering extension activation, Copilot Chat, spec systems, hooks, and cloud agents."
+---
+
+Most GatomIA problems fall into a small set of categories: the extension not activating, Copilot Chat not responding, specs not appearing, hooks not firing, or cloud agent sessions failing. Work through the relevant section below to resolve your issue. If none of the steps help, check the Output channel and file a bug report using the link at the bottom of this page.
+
+<AccordionGroup>
+
+  <Accordion title="GatomIA views don't appear in the sidebar">
+    GatomIA's sidebar views only render when a workspace folder is open. An empty VS Code window does not activate them.
+
+    1. Verify that you have a folder open (not just a file). The title bar shows the folder name when a workspace is active.
+    2. Check that each view is enabled in settings. Search for `gatomia.views` in VS Code settings and confirm `gatomia.views.specs.visible`, `gatomia.views.actions.visible`, `gatomia.views.steering.visible`, and `gatomia.views.hooks.visible` are all set to `true`.
+    3. Reload the window: open the command palette and run **Developer: Reload Window**.
+  </Accordion>
+
+  <Accordion title="Extension not activating">
+    GatomIA requires VS Code 1.90.0 or newer and activates automatically when VS Code starts.
+
+    1. Check your VS Code version: **Help → About**. Update if you are below 1.90.0.
+    2. Open the Output panel (**View → Output**) and select **GatomIA** from the channel dropdown. Look for error messages that indicate what went wrong.
+    3. Try reinstalling the extension: uninstall GatomIA from the Extensions view, reload VS Code, then reinstall from the Marketplace.
+  </Accordion>
+
+  <Accordion title="Copilot Chat doesn't open when running a spec command">
+    GatomIA delegates spec execution to GitHub Copilot Chat. If Copilot Chat is not available, spec commands have nowhere to send their output.
+
+    1. Confirm the **GitHub Copilot Chat** extension is installed and that you are signed in to a GitHub account with an active Copilot subscription.
+    2. Run **GatomIA: Install Dependencies** from the command palette to verify your environment meets all requirements.
+    3. If you recently changed GitHub accounts or subscription tiers, sign out of Copilot in VS Code and sign back in.
+  </Accordion>
+
+  <Accordion title="Agent not appearing in Copilot Chat (@my-agent not found)">
+    GatomIA discovers agents by scanning the configured resources directory at activation time.
+
+    1. Verify your agent file is saved at the correct path. The default location is `resources/agents/<your-agent>.agent.md` inside your workspace.
+    2. Open VS Code settings and check `gatomia.agents.resourcesPath`. It must match the actual directory where your `.agent.md` files are stored.
+    3. Reload the window to force agent re-discovery: **Developer: Reload Window**.
+    4. If `gatomia.agents.enableHotReload` is `false`, GatomIA will not pick up file changes automatically — reload the window after any agent file changes.
+  </Accordion>
+
+  <Accordion title="Spec files not appearing in the Specs view">
+    The Specs view reads from a path that depends on your configured spec system.
+
+    1. Open VS Code settings and check `gatomia.specSystem`. If it is not `auto`, make sure it matches your actual project setup (`speckit` or `openspec`).
+    2. For **SpecKit**: verify `gatomia.speckit.specsPath` points to the directory containing your spec folders (default: `specs`).
+    3. For **OpenSpec**: verify `gatomia.copilot.specsPath` points to your OpenSpec directory (default: `openspec`).
+    4. Click the **Refresh** button in the Specs view toolbar to force a directory re-scan.
+  </Accordion>
+
+  <Accordion title="GatomIA: Migrate to SpecKit fails">
+    The migration command requires the SpecKit CLI and an existing OpenSpec directory.
+
+    1. Install the Specify CLI if it is not already present:
+       ```bash
+       uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+       ```
+    2. Confirm your workspace contains an `openspec/` directory. The migration command reads from that path.
+    3. If the migration partially completed and your workspace is in an inconsistent state, look for the automatic backup directory `openspec.backup/` — GatomIA creates it before making any changes.
+  </Accordion>
+
+  <Accordion title="Hook doesn't trigger">
+    A hook that does not fire is usually either disabled, misconfigured, or targeting the wrong operation.
+
+    1. Open the **Hooks** view and check the hook's status badge. A paused badge means the hook is disabled — right-click and select **Enable Hook**, or run **GatomIA: Enable Hook** from the command palette.
+    2. Review the hook's trigger configuration. Confirm the trigger type, timing, and any condition values match the operation you are performing.
+    3. Open the hook execution logs to see whether the hook fired but encountered an error: click **View Hook Logs** in the Hooks view toolbar, or run **GatomIA: View Hook Logs**.
+  </Accordion>
+
+  <Accordion title="MCP tool not found in the hook browser">
+    GatomIA discovers MCP tools from the Copilot `mcp.json` configuration file at startup.
+
+    1. Open your MCP configuration: run **GatomIA: Open MCP Config** from the command palette. Verify that the MCP server you want to use is listed with a valid configuration.
+    2. Restart VS Code completely (not just reload the window) to force MCP server discovery to run again.
+    3. Check that the MCP server process is running and reachable. A server that fails to start will not appear in the tool browser.
+  </Accordion>
+
+  <Accordion title="Devin tasks not dispatching">
+    Dispatching to Devin requires a valid API token and an active Devin provider selection.
+
+    1. Configure your credentials: run **GatomIA: Configure Provider Credentials** and enter your Devin API token.
+    2. Enable verbose logging to see detailed error output: open VS Code settings and set `gatomia.devin.verboseLogging` to `true`, then check the **GatomIA** Output channel.
+    3. Verify your Devin API token has not expired. Generate a new token in the Devin dashboard and re-enter it via **GatomIA: Configure Provider Credentials**.
+  </Accordion>
+
+</AccordionGroup>
+
+## Getting more help
+
+If the steps above do not resolve your issue, collect diagnostic information before filing a report.
+
+- **View the Output channel**: select **View → Output** and choose **GatomIA** from the dropdown to see runtime logs.
+- **Enable debug logging**: open VS Code settings and set `gatomia.agents.logLevel` to `"debug"`. Reproduce the issue, then copy the relevant output.
+- **File a bug report**: include your VS Code version, GatomIA version, and the Output channel log when opening an issue at [https://github.com/eitatech/gatomia-vscode/issues](https://github.com/eitatech/gatomia-vscode/issues).

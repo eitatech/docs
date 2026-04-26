@@ -1,0 +1,63 @@
+---
+title: "Implement spec tasks with Copilot Chat CodeLens actions"
+description: "Use GatomIA CodeLens annotations in tasks.md to send individual tasks, groups, or the full task list to GitHub Copilot Chat for implementation."
+---
+
+After GatomIA generates a spec, the tasks file becomes your implementation checklist. GatomIA decorates each task item in `tasks.md` with **CodeLens annotations** directly in the editor, letting you send one task, a group, or all tasks to GitHub Copilot Chat with a single click — without leaving your file.
+
+## Start implementing tasks
+
+<Steps>
+  <Step title="Open a tasks file">
+    Open any `tasks.md` file inside your `specs/` folder (SpecKit) or `openspec/specs/<name>/` folder (OpenSpec). GatomIA scans the file and injects CodeLens annotations above each task item automatically.
+  </Step>
+  <Step title="Choose a CodeLens action">
+    Three CodeLens actions appear above tasks:
+
+    | CodeLens | What it does |
+    |---|---|
+    | **Start Task** | Sends the single task below the annotation to Copilot Chat |
+    | **Run Task Group** | Sends the group of related tasks to Copilot Chat |
+    | **Start All Tasks** | Sends every task in the file to Copilot Chat at once |
+
+    Click the annotation that matches the scope of work you want to start.
+  </Step>
+  <Step title="Copilot Chat opens with task context">
+    GitHub Copilot Chat opens with a fully formed prompt that includes the task details and the relevant spec context. You do not need to copy or paste anything manually.
+  </Step>
+  <Step title="Interact with Copilot to implement the code">
+    Review Copilot's proposed implementation in the chat. Ask follow-up questions, request changes, or approve the output and apply it to your workspace.
+  </Step>
+</Steps>
+
+## Manage the spec lifecycle
+
+As implementation progresses, use the **Spec Explorer** to move specs through their review and archival states. Right-click any spec in the sidebar to access these actions.
+
+<Steps>
+  <Step title="Send to Review">
+    When tasks are complete, right-click the spec and select **Send to Review**. This marks the spec as ready for a reviewer to inspect.
+  </Step>
+  <Step title="File change requests (reviewer)">
+    A reviewer can open the Spec Explorer webview and file a change request with a title, description, and severity level (`low`, `medium`, `high`, `critical`). Open change requests block archival until they are addressed.
+  </Step>
+  <Step title="Send to Archived">
+    Once the reviewer approves the spec and all change requests are resolved, right-click the spec and select **Send to Archived**.
+  </Step>
+  <Step title="Unarchive if needed">
+    To revisit an archived spec, right-click it and select **Unarchive**. The spec returns to an active state where you can reopen tasks or file further change requests.
+  </Step>
+</Steps>
+
+<Tip>
+  Use the review workflow to enforce quality gates on your team. Requiring at least one reviewer to approve before archiving ensures that specs reflect the final implementation and can serve as living documentation for future contributors.
+</Tip>
+
+## Dispatch tasks to a cloud agent
+
+For tasks that benefit from autonomous, hands-off implementation, you can route them to a cloud agent instead of running Copilot Chat locally.
+
+- Right-click a single task in the Spec Explorer and select **Run on Cloud** to dispatch that task.
+- Right-click the tasks folder and select **Run Full Spec on Cloud** to dispatch all tasks at once.
+
+Monitor the session in the **Cloud Agents** view. See [Dispatch specs to cloud agents](./cloud-agents) for provider setup and session configuration.

@@ -1,0 +1,73 @@
+---
+title: "Steer GitHub Copilot with rules and a Constitution file"
+description: "Control how GitHub Copilot responds in your project by creating instruction rules, user rules, and a Constitution that set team-wide and personal guidelines."
+---
+
+**Steering** is how you tell GitHub Copilot what to do—and what not to do—across your entire project. Rather than typing the same context into every Copilot Chat message, you write instruction files once and GatomIA makes them available to Copilot automatically. GatomIA supports three distinct types of steering documents, each with a different scope and audience. Open the **Steering** view in the Activity Bar to manage all of them from one place.
+
+## Types of steering documents
+
+### Project rules
+
+Project rules are shared guidelines committed to your repository. Every developer on the team benefits from them automatically when they open the project.
+
+- **Location**: `.github/instructions/*.instructions.md`
+- **Scope**: All team members who clone the repo
+- **Use for**: Coding standards, naming conventions, architectural decisions, review checklists
+
+### User rules
+
+User rules are personal preferences that live on your machine and are never committed to the repository. They let you customize Copilot's behavior without imposing your preferences on colleagues.
+
+- **Location**: `$HOME/.github/instructions/*.instructions.md`
+- **Scope**: Your machine only
+- **Use for**: Preferred response style, personal shortcuts, workflow habits
+
+### Constitution
+
+The Constitution is your project's overarching principles document. It gives Copilot a deep understanding of the project's goals, architecture decisions, and non-negotiable constraints before any conversation starts.
+
+- **SpecKit location**: `.specify/memory/constitution.md`
+- **OpenSpec location**: `AGENTS.md` in the `openspec/` root
+- **Scope**: The entire project, all agents, and all team members
+- **Use for**: Core principles, technology choices, team norms, quality gates
+
+<Tip>
+  Think of the Constitution as a project playbook. Start with 3-5 core principles and refine it over time. Vague guidance produces inconsistent results, so provide concrete examples wherever possible.
+</Tip>
+
+## Creating steering documents
+
+Use the buttons in the **Steering** view to create each document type:
+
+<Steps>
+  <Step title="Create a project rule">
+    Click **Create Project Rule** in the Steering view. Enter a name such as `"TypeScript Rules"`. GatomIA creates `.github/instructions/typescript-rules.instructions.md` and opens it for editing. Instruction names normalize to kebab-case automatically.
+  </Step>
+  <Step title="Create a user rule">
+    Click **Create User Rule** and enter a name for your personal guidance. GatomIA creates the file under `$HOME/.github/instructions/` on your machine only—it is never staged or committed.
+  </Step>
+  <Step title="Create a Constitution">
+    Click **Create Constitution** and enter a brief description of your project (for example, `"Python FastAPI backend for a SaaS billing platform"`). GatomIA opens GitHub Copilot Chat with the `/speckit.constitution` prompt, and Copilot drafts the `constitution.md` file tailored to your description.
+  </Step>
+</Steps>
+
+## Global resource access
+
+GatomIA can also surface global Copilot resources from your home directory—such as `~/.github/copilot-instructions.md` and global instructions, prompts, skills, and agents. Because these files live outside your workspace, GatomIA applies an access policy before reading them.
+
+Configure the policy in VS Code settings:
+
+| Setting | Options | Description |
+|---------|---------|-------------|
+| `gatomia.steering.globalResourceAccessDefault` | `ask` (default), `allow`, `deny` | Default policy for reading global Copilot resources in your home directory |
+| `gatomia.steering.workspaceGlobalResourceAccess` | `inherit` (default), `allow`, `deny` | Per-workspace override; `inherit` follows the global default |
+
+Set the policy to `allow` if you always want global resources available, `deny` to block them entirely, or leave it as `ask` (the default) to be prompted each time.
+
+## Best practices
+
+- **Commit project rules** alongside your code so they evolve with the project.
+- **Be specific**: instruction files with concrete examples produce far more consistent Copilot responses than vague guidelines.
+- **Review quarterly**: schedule regular reviews of steering documents the same way you review other project documentation.
+- **Version control the Constitution**: treat it like code—run pull-request reviews when its content changes.

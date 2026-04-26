@@ -1,0 +1,96 @@
+{
+  "projectType": "frontend",
+  "projectName": "GatomIA",
+  "projectDescription": "A VS Code extension that brings Agentic Spec-Driven Development to your workflow, integrating SpecKit, OpenSpec, and GitHub Copilot to visually manage specs, steering documents, agents, and automation hooks.",
+  "theme": "luma",
+  "primaryColor": "#5B5BD6",
+  "lightColor": "#EDEDFC",
+  "darkColor": "#1E1E3F",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/specs",
+              "concepts/steering",
+              "concepts/agents",
+              "concepts/hooks"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/create-spec",
+              "guides/implement-tasks",
+              "guides/manage-steering",
+              "guides/custom-agents",
+              "guides/automate-hooks",
+              "guides/cloud-agents"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "configuration/settings",
+              "configuration/workspace-layout",
+              "configuration/spec-systems"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "reference/commands",
+              "reference/template-variables",
+              "reference/troubleshooting"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Spec-Driven Development with SpecKit and OpenSpec support",
+    "GitHub Copilot Chat integration for AI-assisted spec and code generation",
+    "Visual Spec Explorer with lifecycle management (draft → review → archived)",
+    "Steering management: Constitution, project rules, and user instruction rules",
+    "Agent discovery and custom Copilot Chat agent creation",
+    "MCP Hooks automation: trigger actions on agent/spec events",
+    "Cloud agent dispatch via Devin and Gemini CLI (ACP)",
+    "Prompt and skill management in the Actions explorer",
+    "Hot-reload of agent resources without extension restart",
+    "Welcome screen with dependency detection and one-click setup"
+  ],
+  "publicApiSurface": [
+    "gatomia.spec.create — Create New Spec",
+    "gatomia.spec.runTask — Run a single task via Copilot Chat",
+    "gatomia.spec.runFullSpec — Run all tasks in a spec",
+    "gatomia.spec.sendToReview — Transition spec to review state",
+    "gatomia.spec.sendToArchived — Archive a spec",
+    "gatomia.steering.createProjectRule — Create a project-scoped instruction rule",
+    "gatomia.steering.createUserRule — Create a personal instruction rule",
+    "gatomia.steering.createConstitution — Generate a Constitution document",
+    "gatomia.hooks.addHook — Create a new automation hook",
+    "gatomia.hooks.viewLogs — View hook execution logs",
+    "gatomia.actions.run — Execute a prompt or action",
+    "gatomia.actions.createAgentFile — Create a new agent definition",
+    "gatomia.actions.createSkill — Create a new skill resource",
+    "gatomia.dispatchTask — Run a task on a cloud agent (Devin/Gemini)",
+    "gatomia.dispatchFullSpec — Dispatch a full spec to cloud agent",
+    "gatomia.migration.start — Migrate OpenSpec project to SpecKit",
+    "gatomia.showWelcome — Open the Welcome Screen",
+    "gatomia.acp.switchProvider — Switch active chat/agent provider",
+    "Agent resource format: resources/agents/<name>.agent.md",
+    "Hook template variables: $agentOutput, $clipboardContent, $outputPath, $specId, $specTitle, $timestamp, $branch"
+  ]
+}

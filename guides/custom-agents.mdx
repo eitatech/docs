@@ -1,0 +1,92 @@
+---
+title: "Build and register custom Copilot Chat agents in GatomIA"
+description: "Define agent files, prompts, and skills in your project so GatomIA can register them with GitHub Copilot Chat for use with @ mentions."
+---
+
+GatomIA automatically discovers agent definition files in your project and registers them as GitHub Copilot Chat participants. Once registered, you interact with your agents directly in Copilot Chat using `@` mentions and slash commands — no extension reload required. The **Actions** view in the GatomIA sidebar gives you a visual explorer for all discovered agents, prompts, and skills.
+
+## Create an agent definition file
+
+<Steps>
+  <Step title="Create the agents directory">
+    Create a `resources/agents/` directory at your workspace root if it does not already exist. This path is configurable via `gatomia.agents.resourcesPath`.
+  </Step>
+  <Step title="Add a .agent.md file">
+    Create a file named `my-agent.agent.md` (or any kebab-case name) inside `resources/agents/`. Use YAML frontmatter to define the agent metadata:
+
+    ```markdown
+    ---
+    id: my-agent
+    name: My Agent
+    fullName: My Custom Agent Implementation
+    description: What this agent does
+    commands:
+      - name: analyze
+        description: Analyze project structure
+        tool: my.analyze
+    resources:
+      prompts: [analysis.prompt.md]
+      skills: [expertise.skill.md]
+    ---
+
+    # My Agent
+
+    Documentation about the agent goes here.
+    ```
+
+    The `id` field determines the `@` mention handle you use in chat.
+  </Step>
+  <Step title="GatomIA discovers and registers the agent">
+    GatomIA scans the `resources/agents/` directory when the extension activates and whenever a file changes. Your new agent appears in the **Actions** view and becomes available in Copilot Chat automatically.
+  </Step>
+  <Step title="Use the agent in Copilot Chat">
+    Open GitHub Copilot Chat (`Ctrl+Shift+I` / `Cmd+Shift+I`), type `@my-agent`, then type a command such as `/analyze`. Press **Enter** to run the agent command.
+  </Step>
+</Steps>
+
+<Note>
+  Every agent defined in GatomIA supports a built-in `/help` command out of the box. Type `@my-agent /help` to see all available commands for that agent, or `@my-agent /help analyze` to get detailed documentation for a specific command.
+</Note>
+
+## Create supporting resources
+
+Agents can reference three types of resource files. Place them in the corresponding subdirectory of your `resources/` folder.
+
+| Resource type | Directory | File suffix | Purpose |
+|---|---|---|---|
+| Prompts | `resources/prompts/` | `.prompt.md` | Reusable prompt templates the agent can load and execute |
+| Skills | `resources/skills/` | `.skill.md` | Domain knowledge packages that shape agent responses |
+| Instructions | `resources/instructions/` | `.md` | Behavior guidelines applied during agent execution |
+
+Reference these files in the `resources` block of your agent frontmatter so GatomIA loads and caches them at startup.
+
+## Use the Actions explorer
+
+<Steps>
+  <Step title="Open the Actions view">
+    Click the GatomIA icon in the Activity Bar and select the **Actions** view. The tree lists all discovered agents, prompts, skills, and instructions organized by type.
+  </Step>
+  <Step title="Create new items from the toolbar">
+    Use the toolbar buttons to create a new agent file (`gatomia.actions.createAgentFile`), a new skill (`gatomia.actions.createSkill`), or a new prompt (`gatomia.actions.create`). GatomIA creates the file in the correct directory with a starter template.
+  </Step>
+  <Step title="Run a prompt directly">
+    Click the **play** button next to any prompt in the Actions view. GatomIA sends the prompt to Copilot Chat immediately, executing it with the current workspace context.
+  </Step>
+  <Step title="Rename or delete">
+    Right-click any item to rename or delete it. GatomIA updates the file on disk and refreshes the Actions tree.
+  </Step>
+</Steps>
+
+## Configuration
+
+Adjust agent behavior through VS Code settings under **Settings > GatomIA > Agents**.
+
+| Setting | Type | Default | Description |
+|---|---|---|---|
+| `gatomia.agents.resourcesPath` | string | `resources` | Root directory for agents, prompts, skills, and instructions |
+| `gatomia.agents.enableHotReload` | boolean | `true` | Auto-reload resources when any file in the resources directory changes |
+| `gatomia.agents.logLevel` | string | `info` | Logging verbosity (`debug`, `info`, `warn`, `error`) |
+
+<Tip>
+  Keep `gatomia.agents.enableHotReload` enabled while you are building or refining an agent. Every time you save a `.agent.md`, `.prompt.md`, or `.skill.md` file, GatomIA reloads the resource without requiring an extension restart, so you can test changes immediately in Copilot Chat.
+</Tip>
